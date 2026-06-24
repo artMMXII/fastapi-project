@@ -5,4 +5,3 @@ app = FastAPI(
     description="Учебное приложение для курса по FastAPI",
     version="1.0.0"
 )
-
