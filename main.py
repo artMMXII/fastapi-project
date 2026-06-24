@@ -78,3 +78,13 @@ def update_user_partial(user_id: int, user_update: UserUpdate):
 
     raise HTTPException(status_code=404, detail="User not found")
 
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int):
+    """Удаляет пользователя по ID"""
+    for index, user in enumerate(users_db):
+        if user["id"] == user_id:
+            del users_db[index]  # Удаляем из списка
+            return {"message": f"User {user_id} deleted"}
+
+    raise HTTPException(status_code=404, detail="User not found")
