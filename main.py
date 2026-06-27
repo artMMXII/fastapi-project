@@ -8,6 +8,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 class User(BaseModel):
     id: int
     name: str
@@ -19,14 +20,17 @@ users_db = [
     {"id": 2, "name": "Bob", "age": 30},
 ]
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello FastAPI!"}
+
 
 @app.get("/users")
 def get_all_users():
     """Возвращает список всех пользователей"""
     return users_db
+
 
 @app.get("/users/{user_id}")
 def get_user(user_id: int):
@@ -36,6 +40,7 @@ def get_user(user_id: int):
             return user
     # Если не нашли — выдаем ошибку 404
     raise HTTPException(status_code=404, detail="User not found")
+
 
 @app.post("/users")
 def create_user(user: User):
@@ -91,15 +96,26 @@ def delete_user(user_id: int):
 
 
 fake_tasks_db = [
-    {"task_id": 1, "task_name": "Изучить Python"},
-    {"task_id": 2, "task_name": "Подключить Базу Данных"},
-    {"task_id": 3, "task_name": "Выучить FastAPI"},
+    {"task_name": "Task 1"},
+    {"task_name": "Task 2"},
+    {"task_name": "Task 3"},
+    {"task_name": "Task 4"},
+    {"task_name": "Task 5"},
+    {"task_name": "Task 6"},
+    {"task_name": "Task 7"},
+    {"task_name": "Task 8"},
+    {"task_name": "Task 9"},
+    {"task_name": "Task 10"},
 ]
 
-@app.get("/tasks/{task_id}")
-def get_task(task_id: int):
-    for task in fake_tasks_db:
-        if task["task_id"] == task_id:
-            return task
-    return {}
 
+@app.get("/tasks")
+async def get_tasks(limit: int = 10, offset: int = 0, keyword: str | None = None):
+    if keyword:
+        return [
+                   task
+                   for task in fake_tasks_db
+                   if keyword.lower() in task["task_name"].lower()
+               ][offset:offset + limit]
+
+    return fake_tasks_db[offset:offset + limit]
