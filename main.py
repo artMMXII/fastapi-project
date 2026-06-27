@@ -88,3 +88,18 @@ def delete_user(user_id: int):
             return {"message": f"User {user_id} deleted"}
 
     raise HTTPException(status_code=404, detail="User not found")
+
+
+fake_tasks_db = [
+    {"task_id": 1, "task_name": "Изучить Python"},
+    {"task_id": 2, "task_name": "Подключить Базу Данных"},
+    {"task_id": 3, "task_name": "Выучить FastAPI"},
+]
+
+@app.get("/tasks/{task_id}")
+def get_task(task_id: int):
+    for task in fake_tasks_db:
+        if task["task_id"] == task_id:
+            return task
+    return {}
+
