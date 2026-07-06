@@ -1,21 +1,13 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
+# Схема для добавления задачи (то, что присылает пользователь)
 class STaskAdd(BaseModel):
-    name: str = Field(
-        ...,
-        min_length=2,
-        max_length=100,
-    )
+    name: str
+    description: str | None = None
 
-    priority: int = Field(
-        default=1,
-        ge=1,
-        le=5
-    )
-
-    description: str | None = Field(
-        default=None,
-        max_length=300,
-        title="Краткое описание",
-        description='Подробное описание задачи'
-    )
+# Схема для чтения (то, что мы отдаем пользователю)
+# Здесь появляется поле id
+class STask(BaseModel):
+    id: int
+    name: str
+    description: str | None = None

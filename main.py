@@ -1,25 +1,19 @@
 from fastapi import FastAPI
-from schemas import STaskAdd
+from schemas import STaskAdd, STask
 
 app = FastAPI()
 
-# Имитация базы данных
-tasks = []
-
-@app.get("/tasks")
-async def get_tasks():
-    return {"tasks": tasks}
 
 @app.post("/tasks")
-async def add_task(task: STaskAdd):
-    # 1. Добавляем задачу в список.
-    # Чтобы сохранить её как словарь, используем model_dump()
-    tasks.append(task.model_dump())
+async def create_task(task: STaskAdd) -> STask:
+    # Представим, что мы сохранили задачу в БД и получили ID = 1
+    # Мы формируем полный словарь данных
+    task_dict = task.model_dump()
+    task_dict["id"] = 1  # Добавляем ID, которого не было в запросе
 
-    # 2. Очищаем список (для теста)
-    # Если список стал слишком большим, удаляем старые (опционально)
-    if len(tasks) > 20:
-        tasks.clear()
+    # Допустим, у нас тут есть лишнее секретное поле
+    task_dict["secret_code"] = "12345"
 
-    # 3. Возвращаем подтверждение
-    return {"ok": True, "message": "Задача добавлена"}
+    # Возвращаем словарь, в котором ЕСТЬ secret_code
+    return task_dict
+
