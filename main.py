@@ -6,6 +6,9 @@ app = FastAPI()
 # Имитация базы данных
 tasks = []
 
+@app.get("/tasks")
+async def get_tasks():
+    return {"tasks": tasks}
 
 @app.post("/tasks")
 async def add_task(task: STaskAdd):
