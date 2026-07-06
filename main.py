@@ -1,10 +1,22 @@
 from fastapi import FastAPI
-from schemas import STaskAdd  # Импортируем нашу схему
+from schemas import STaskAdd
 
 app = FastAPI()
 
-# Создаем эндпоинт для добавления задачи
+# Имитация базы данных
+tasks = []
+
+
 @app.post("/tasks")
 async def add_task(task: STaskAdd):
-    return {"message": "Задача получена", "data": task}
+    # 1. Добавляем задачу в список.
+    # Чтобы сохранить её как словарь, используем model_dump()
+    tasks.append(task.model_dump())
 
+    # 2. Очищаем список (для теста)
+    # Если список стал слишком большим, удаляем старые (опционально)
+    if len(tasks) > 20:
+        tasks.clear()
+
+    # 3. Возвращаем подтверждение
+    return {"ok": True, "message": "Задача добавлена"}
