@@ -1,13 +1,14 @@
 from pydantic import BaseModel
 
-# Схема для добавления задачи (то, что присылает пользователь)
-class STaskAdd(BaseModel):
+# 1. Базовый класс (общие поля)
+class STaskBase(BaseModel):
     name: str
     description: str | None = None
 
-# Схема для чтения (то, что мы отдаем пользователю)
-# Здесь появляется поле id
-class STask(BaseModel):
+# 2. Класс для создания (ничего не добавляет, просто копирует базу)
+class STaskAdd(STaskBase):
+    pass
+
+# 3. Класс для чтения (добавляет id)
+class STask(STaskBase):
     id: int
-    name: str
-    description: str | None = None

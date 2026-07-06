@@ -3,17 +3,22 @@ from schemas import STaskAdd, STask
 
 app = FastAPI()
 
+tasks = []
 
-@app.post("/tasks")
-async def create_task(task: STaskAdd) -> STask:
-    # Представим, что мы сохранили задачу в БД и получили ID = 1
-    # Мы формируем полный словарь данных
+
+@app.post("/tasks", response_model=STask)
+async def create_task(task: STaskAdd):
+    # 1. Превращаем Pydantic-модель в словарь
     task_dict = task.model_dump()
-    task_dict["id"] = 1  # Добавляем ID, которого не было в запросе
 
-    # Допустим, у нас тут есть лишнее секретное поле
-    task_dict["secret_code"] = "12345"
+    # 2. Генерируем ID (просто берем длину списка + 1)
+    # В реальной БД это происходит автоматически
+    task_id = len(tasks) + 1
+    task_dict["id"] = task_id
 
-    # Возвращаем словарь, в котором ЕСТЬ secret_code
+    # 3. Сохраняем в список
+    tasks.append(task_dict)
+
+    # 4. Возвращаем словарь.
+    # FastAPI сам превратит его в схему STask (проверит наличие ID)
     return task_dict
-
