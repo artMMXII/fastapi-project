@@ -16,21 +16,15 @@ async def create_task(task: STaskAdd):
     return task_dict
 
 
-@app.get("/tasks/{task_id}")
+@app.get("/tasks/{task_id}", response_model=STask)
 async def get_task(task_id: int):
-    # Пытаемся найти задачу (упрощенная логика поиска)
-    current_task = None
-    for t in tasks:
-        if t["id"] == task_id:
-            current_task = t
-            break
+    # Ищем задачу в списке
+    for task in tasks:
+        if task["id"] == task_id:
+            return task
 
-    # Если задача не найдена (переменная осталась None)
-    if current_task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Задача с ID {task_id} не найдена"
-        )
-
-    return current_task
-
+    # Если дошли до этой строки, значит, return не сработал (задача не найдена)
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Задача с ID {task_id} не найдена"
+    )
