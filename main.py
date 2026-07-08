@@ -28,3 +28,17 @@ async def get_task(task_id: int):
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Задача с ID {task_id} не найдена"
     )
+
+
+@app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_task(task_id: int):
+    for index, task in enumerate(tasks):
+        if task["id"] == task_id:
+            tasks.pop(index)
+            return
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail='Задача не найлена'
+    )
+
