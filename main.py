@@ -39,6 +39,5 @@ async def delete_task(task_id: int):
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail='Задача не найлена'
+        detail='Задача не найдена'
     )
-
