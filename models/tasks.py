@@ -9,3 +9,4 @@ class TaskModel(Model):
     name: Mapped[str]
     description: Mapped[str | None] = mapped_column(default=None)
     is_completed: Mapped[bool] = mapped_column(default=False)
+
